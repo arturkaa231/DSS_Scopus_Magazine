@@ -1,10 +1,266 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+	<meta charset="UTF-8">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bo	otstrapcdn.com/bootstrap/3.3.7/css/b.." integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
-<body>
+<body data-spy="scroll" data-target="#nav">
+<nav class="navbar navbar-inverse" id="nav">
+<div class="container-fluid">
+<div>
+
+<div class="navbar-header ">
+
+<a href="r'^'" class="navbar-brand" >ИИС поддержки и принятия решений для выбора журналов Scopus</a>
+</br>
+</div>
+
+</div>
+</div>
+<div class=" well homefull">
+	<form role="form" method="post" id="post-form">
+	{% csrf_token%}
+	<div class="row">
+<div class="col-lg-6">
+	<label>Введите id: </label>
+	<input id="id" class="form-control "{{form.id}}</div>
+<div class="col-lg-6">
+	<label>Название версии журнала в Scopus или его часть: </label>
+	<input id="title" class="form-control"{{form.title}}</div></div>
+<div class="row">
+	<div class="col-lg-6"><label>ISSN печатной версии в Scopus: </label>
+	<input id="ISSN" class="form-control"{{form.ISSN}}</div>
+	<div class="col-lg-6"><label>E-ISSN версии в Scopus: </label>
+	<input id="E_ISSN" class="form-control"{{form.E_ISSN}}</div></div>
+	
+	<label>Временные рамки принятия: </label>
+	<div class="row"><div class="col-lg-3"><input id="date1" class="form-control"{{form.date1}}</div>
+	<div class="col-lg-3"><input id="date2" class="form-control"{{form.date2}}</div></div>
+<div class="row">
+	<div class="col-lg-6"><label>Тип журнала:</label><div class="btn-group">
+<button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">Выбрать<span class="caret"></span></button>
+<ul class="dropdown-menu">
+<li><a id="trade">trade journal</a></li>
+<li class="divider"></li>
+<li><a id="journal">journal</a></li>
+<li class="divider"></li>
+<li><a id="book">book series</a></li>
+<li class="divider"></li>
+
+</ul>
+
+</div>
+	<input id="source_type" class="form-control"{{form.source_type}}</div>
+	<div class="col-lg-6"><label>Издательство вресии журнала по данным Scopus:</label>
+	<input id="publisher" class="form-control"{{form.publisher}}</div></div>
+<div class="row">
+	<div class="col-lg-6"><label>Страна:</label>
+	<input id="country" class="form-control"{{form.country}}</div>
+	<div class="col-lg-6"><label>ASJS-коды(через точку с запятой):</label>
+	<input id="ASJS" class="form-control"{{form.ASJS}}</div></div>
+<div class="row">
+	<div class="col-lg-6"><label>Язык: <div class="btn-group">
+<button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">Выбрать<span class="caret"></span></button>
+<ul class="dropdown-menu">
+<li><a id="eng">eng</a></li>
+<li class="divider"></li>
+<li><a id="rus">rus</a></li>
+<li class="divider"></li>
+<li><a id="ger">ger</a></li>
+<li class="divider"></li>
+<li><a id="spa">spa</a></li>
+<li class="divider"></li>
+<li><a id="fre">fre</a></li>
+<li class="divider"></li>
+
+</ul>
+
+</div>
+</label>
+	<input id="language" class="form-control"{{form.language}}</div>
+	<div class="col-lg-6"><label>Тема: </label>
+	<input id="Theme" class="form-control"{{form.Theme}}</div></div></br>
+	<div class="row"><div class="col-lg-2"><input id="submit" type="submit" class="btn btn-default" value="Показать подобранные журналы"/></form></div>
+<div class="col-lg-offset-9"><form enctype="multipart/form-data" role="form" method="post" id="fileform" action="{% url 'download_file' %}">
+<div id="upskr" >
+<div class="form-group ">
+<div class="col-lg-6"> <span id="skrepka"><img src="{% static "skrepka.png"%}"width="40px" height="40px">Выбрать excel</span> <span class=""></span></br>
+<span id="upload" hidden="">{{file_form.Exc}}</span>
+</div>
+<input type="hidden" id="X-Progress-ID" name="X-Progress-ID" value=""/>
+<input type="hidden" id="id" name="id" value=""/>
+<input type="submit" class="btn btn-default" id="Exc"  value="Загрузить">
+</form></div></div>
+</div>
+</nav>
+
+<div id="panel" class="panel-group" hidden="true">
+  <div class="panel panel-default">
+<div class="panel-heading">Список журналов</div>
+    <div id="journals" class="panel-body">
+</div>
+  </div>
 
 </body>
-</html>
+<script
+			  src="https://code.jquery.com/jquery-3.2.1.js"
+			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+			  crossorigin="anonymous"></script>
+<script>
+$( "#trade" ).click(function() {
+  $('#source_type').attr('value','trade journal')
+});
+$( "#journal" ).click(function() {
+  $('#source_type').attr('value','journal')
+});
+$( "#book" ).click(function() {
+  $('#source_type').attr('value','book series')
+});
+
+
+$( "#eng" ).click(function() {
+  $('#language').attr('value','eng')
+});
+$( "#rus" ).click(function() {
+  $('#language').attr('value','rus')
+});
+$( "#ger" ).click(function() {
+  $('#language').attr('value','ger')
+});
+$( "#spa" ).click(function() {
+  $('#language').attr('value','spa')
+});
+$( "#fre" ).click(function() {
+  $('#language').attr('value','fre')
+});
+    $('#post-form').on('submit', function(event){
+    event.preventDefault();
+    create_post();
+    });
+
+    function create_post() {
+	
+    $.ajax({
+    url : "/DSS/magazine/", // the endpoint
+    type : "POST", // http met
+    data :{"id":$('#id').val(),"title":$('#title').val(),"ISSN":$('#ISSN').val(),"E_ISSN":$('#E_ISSN').val(),"date1":$('#date1').val(),"date2":$('#date2').val(),"source_type":$('#source_type').val(),"publisher":$('#publisher').val(),"country":$('#country').val(),"ASJS":$('#ASJS').val(),"language":$('#language').val(),"Theme":$('#Theme').val()}, // data sent with the post request
+    // handle a successful response
+    success : function(json) {
+  $('#journals').empty()
+    for (var i = 0; i < json[0].length; i++) {
+  $('#journals').append('<a href="'+(json[1][i])+'"><h3 class="text-primary">'+(json[0][i])+'</h3></a>')
+  $('#journals').append('<hr>')
+}
+    
+   
+    $('#panel').attr('hidden',false)
+  
+	
+    // remove the value from the input
+    console.log("success"); // another sanity check
+    },
+
+    // handle a non-successful response
+    error : function(){
+        alert('Value error');
+    }
+    });
+    };
+
+
+
+</script>
+<script>!function ($) {
+
+"use strict"; // jshint ;_;
+
+/* DROPDOWN CLASS DEFINITION
+* ========================= */
+
+var toggle = '[data-toggle="dropdown"]'
+, Dropdown = function (element) {
+var $el = $(element).on('click.dropdown.data-api', this.toggle)
+$('html').on('click.dropdown.data-api', function () {
+$el.parent().removeClass('open')
+})
+}
+
+Dropdown.prototype = {
+
+constructor: Dropdown
+
+, toggle: function (e) {
+var $this = $(this)
+, $parent
+, selector
+, isActive
+
+if ($this.is('.disabled, :disabled')) return
+
+selector = $this.attr('data-target')
+
+if (!selector) {
+selector = $this.attr('href')
+selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') //strip for ie7
+}
+
+$parent = $(selector)
+$parent.length || ($parent = $this.parent())
+
+isActive = $parent.hasClass('open')
+
+clearMenus()
+
+if (!isActive) $parent.toggleClass('open')
+
+return false
+}
+
+}
+
+function clearMenus() {
+$(toggle).parent().removeClass('open')
+}
+
+/* DROPDOWN PLUGIN DEFINITION
+* ========================== */
+
+$.fn.dropdown = function (option) {
+return this.each(function () {
+var $this = $(this)
+, data = $this.data('dropdown')
+if (!data) $this.data('dropdown', (data = new Dropdown(this)))
+if (typeof option == 'string') data[option].call($this)
+})
+}
+
+$.fn.dropdown.Constructor = Dropdown
+
+/* APPLY TO STANDARD DROPDOWN ELEMENTS
+* =================================== */
+
+$(function () {
+$('html').on('click.dropdown.data-api', clearMenus)
+$('body')
+.on('click.dropdown', '.dropdown form', function (e) { e.stopPropagation() })
+.on('click.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+})
+
+}(window.jQuery);
+
+</script>
+<script>
+$("#skrepka").mouseover(function(){
+$("#upload").show("slow");
+
+});
+
+$("#upskr").mouseleave(function(){
+$("#upload").hide(1000);
+
+});
+</script>
