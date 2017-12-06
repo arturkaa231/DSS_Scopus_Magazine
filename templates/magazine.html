@@ -12,14 +12,8 @@
 <nav class="navbar navbar-inverse" id="nav">
 <div class="container-fluid">
 <div>
-
 <div class="navbar-header ">
-
-<a href="r'^'" class="navbar-brand" >ИИС поддержки и принятия решений для выбора журналов Scopus</a>
-</br>
-</div>
-
-</div>
+<a href="r'^'" class="navbar-brand" >ИИС поддержки и принятия решений для выбора журналов Scopus</a></br></div></div>
 </div>
 <div class=" well homefull">
 	<form role="form" method="post" id="post-form">
@@ -50,9 +44,7 @@
 <li class="divider"></li>
 <li><a id="book">book series</a></li>
 <li class="divider"></li>
-
 </ul>
-
 </div>
 	<input id="source_type" class="form-control"{{form.source_type}}</div>
 	<div class="col-lg-6"><label>Издательство вресии журнала по данным Scopus:</label>
@@ -76,9 +68,7 @@
 <li class="divider"></li>
 <li><a id="fre">fre</a></li>
 <li class="divider"></li>
-
 </ul>
-
 </div>
 </label>
 	<input id="language" class="form-control"{{form.language}}</div>
@@ -94,17 +84,12 @@
 <input type="hidden" id="X-Progress-ID" name="X-Progress-ID" value=""/>
 <input type="hidden" id="id" name="id" value=""/>
 <input type="submit" class="btn btn-default" id="Exc"  value="Загрузить">
-</form></div></div>
-</div>
+</form></div></div></div>
 </nav>
-
 <div id="panel" class="panel-group" hidden="true">
   <div class="panel panel-default">
 <div class="panel-heading">Список журналов</div>
-    <div id="journals" class="panel-body">
-</div>
-  </div>
-
+    <div id="journals" class="panel-body"></div></div>
 </body>
 <script
 			  src="https://code.jquery.com/jquery-3.2.1.js"
@@ -120,8 +105,6 @@ $( "#journal" ).click(function() {
 $( "#book" ).click(function() {
   $('#source_type').attr('value','book series')
 });
-
-
 $( "#eng" ).click(function() {
   $('#language').attr('value','eng')
 });
@@ -141,9 +124,7 @@ $( "#fre" ).click(function() {
     event.preventDefault();
     create_post();
     });
-
-    function create_post() {
-	
+    function create_post() {	
     $.ajax({
     url : "/DSS/magazine/", // the endpoint
     type : "POST", // http met
@@ -155,11 +136,7 @@ $( "#fre" ).click(function() {
   $('#journals').append('<a href="'+(json[1][i])+'"><h3 class="text-primary">'+(json[0][i])+'</h3></a>')
   $('#journals').append('<hr>')
 }
-    
-   
     $('#panel').attr('hidden',false)
-  
-	
     // remove the value from the input
     console.log("success"); // another sanity check
     },
@@ -170,9 +147,6 @@ $( "#fre" ).click(function() {
     }
     });
     };
-
-
-
 </script>
 <script>!function ($) {
 

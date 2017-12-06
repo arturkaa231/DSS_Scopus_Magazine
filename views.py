@@ -54,9 +54,6 @@ def download_file(request):
 						date = str(year) + "-" + str(month) + "-" + str(day)
 						q.append("'" + date + "'")
 						continue
-		
-		
-		
 					elif row[c_el]=="" :
 						q.append("'none'")
 						continue
@@ -65,13 +62,9 @@ def download_file(request):
 			if theme=='':
 				continue
 			q.append("'"+theme+"'")
-			#добавляем ссылку на журнал
-			print("'"+q[1]+q[6]+"'")
-	
 			req=query+"("+','.join(q)+")"
 			get_clickhouse_data(req,'http://127.0.0.1:8123')
 	handle_uploaded_file(request.FILES['Exc'])
-	
 	args={}
 	args.update(csrf(request))
 	args['form']=ReqForm
@@ -79,12 +72,7 @@ def download_file(request):
 	return render_to_response('magazine.html',args)
 @csrf_exempt
 def main(request):
-	
-	def mail_search(query):
-		#opener = urllib.request.build_opener()
-		#opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-		#doc=opener.open('http://go.mail.ru/search?fm=1&q='+quote(query)).read().decode('cp1251',errors='ignore')
-		
+	def google_search(query):
 		url ='http://www.google.com/search?q='
 		page = requests.get(url + query)
 		soup = BeautifulSoup(page.text)
@@ -94,23 +82,6 @@ def main(request):
 			elem=elem.contents[0]
 			link=("https://www.google.com" + elem["href"])
 			l.append(link)
-		
-		#s = requests.Session()
-		#s.proxies = {"http": "http://82.137.250.78:55555"}
-		#r = s.get('http://go.mail.ru/search?fm=1&q='+quote(query))
-		
-		#doc = urllib.request.urlopen('http://go.mail.ru/search?fm=1&q='+quote(query)).read().decode('cp1251',errors='ignore')
-		#print(r.text)
-		# В список sp получим все ссылки на результаты поиска из этой страницы
-		#print('http://go.mail.ru/search?fm=1&q='+quote(query))
-		#o=re.compile('"url":"(.*?)"')
-		#l=o.findall(doc)
-		#print(l)
-		#sp=[]
-		#for x in l:
-			#if((x.rfind('youtube')==-1) and(x.rfind('yandex')==-1) and(x.rfind('mail.ru')==-1) and(x.rfind('.jpg')==-1) and(x.rfind('.png')==-1) and(x.rfind('.gif')==-1)):
-				#sp.append(x)
-		#print(sp)
 		return l[0]
 	
 	if request.method=='POST':
@@ -152,44 +123,21 @@ def main(request):
 		if Theme!="":
 			where.append('Theme LIKE'+"'%"+Theme+"%'")
 		where=' AND '.join(where)
-		#print(where)
 		q=''' SELECT title,'Издательство:', publisher FROM DSSDB.Mag WHERE {where} ORDER BY id FORMAT JSON'''.format(where=where)
 		journals=[]
 		links=[]
 		resp=json.loads(get_clickhouse_data(q,'http://127.0.0.1:8123'))['data']
-		
 		if resp==[]:
 			journals.append('К сожалению, совпадений не найдено')
-		
-		k=0
 		for i in resp:
 			
 			journals.append(i['title'])
-			#print(i['title']+' '+i['publisher'])
-			#if k==0:
-				#try:
-					#links.append(mail_search(i['title']+' '+i['publisher']))
-				#except:
-					#links.append('#')
-					#k=1
-			#else:
-				#links.append('#')
-			
-			#print(mail_search(resp[i]))
-			
-			links.append(mail_search(i['title']+' '+i['publisher']))
+			links.append(google_search(i['title']+' '+i['publisher']))
 		r=[journals,links]
-			
-		
-		
-		#resp='\n'.join(resp)
-		
-		
 		return JsonResponse(r,safe=False)
 	else:
 		args={}
 		args.update(csrf(request))
 		args['form']=ReqForm
 		args['file_form']=FileForm
-
 		return render_to_response('magazine.html',args)
